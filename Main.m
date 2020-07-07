@@ -1,6 +1,6 @@
 % 1) Setup
 %%%%%%%%%%
-clear all
+%clear all
 close all
 
 %%% INPUTS %%%
@@ -23,11 +23,11 @@ total_loops = inputs(4,1); % # Total number of loops
 pmax = inputs(5,1); % Maximum path length (m)
 max_scatter = inputs(6,1); % Maximum number of scattering events
 
-h = waitbar(0,'Simulation progress...'); % Initialise progress bar   
-progress = 0; % Initialise progress
-
 % 2) Begin simulation
 %%%%%%%%%%%%%%%%%%%%%
+start = tic; % Start main timer
+h = waitbar(0,'Simulation progress...'); % Initialise progress bar   
+progress = 0; % Initialise progress
 num_loops = 0;
 
 while num_loops < total_loops
@@ -74,7 +74,17 @@ scatter_cntr = scatter_cntr + 1; % Increment scattering event counter
 end
 % h) Save position and weights history
 savename = horzcat('Loop',num2str(num_loops),'.mat');
-save(savename,'positions','a');
+save(savename,'positions','a','inputs');
 end
 
+% Simulation complete. Tidying up:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 close(h); % Close progress bar
+total_time = toc(start); % Obtain total run time
+
+TOT_HOUR = floor(total_time/60^2); % # of hours
+TOT_MINS = floor(((total_time/60^2) - TOT_HOUR) * 60); % # of minutes
+TOT_SEC = round(total_time - ((TOT_HOUR*60^2) + (TOT_MINS*60))); % # of secs
+
+close_string = horzcat('Simulation complete. Total run time: ',num2str(TOT_HOUR),' h, ', num2str(TOT_MINS),' m, ', num2str(TOT_SEC),' s.');
+f = msgbox(close_string); % Display run time
