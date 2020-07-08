@@ -68,26 +68,40 @@ hits{2}(idx,:) = [];
 % intercepts, so we next work out the positions where these trajectories
 % intercepted the target.
 
-% Using the parametric line equation, find the values of parameter "t" at 
-% the point where the Z coordinate is equal to "trgt_dist", i.e. the values 
-% of t at the intercepts:
-t = (trgt_dist -hits{1}(:,3))./(hits{2}(:,3)-hits{1}(:,3));
+% h2 = waitbar(0,'Step 2 of 2: Calculating coordinates of target intercepts...'); % Initialise progress bar
+% h2_barlength = size(hits{1},1); % Max value for progress bar
 
-% Enter these values of t into the line equation to find the coordinates of
-% interception:
-coordinates = hits{1}(:,1:3) + t.*(hits{2}(:,1:3)-hits{1}(:,1:3));
+%%% Define the parametric line equations for these pairs of points:
+syms t
+t_target = hits{1}(:,3) + t.*(hits{2}(:,3)-hits{1}(:,3)); 
 
-% Find the corresponding weights at the intercept points:
-d = vecnorm(transpose(coordinates - hits{1}(:,1:3))); % Distance between points
-hitweights = hits{1}(:,4) * exp(-a*d); % Updated weights
+t = (t_target -hits{1}(:,3))./(h2(:,3)-hits{1}(:,3))
+xyzresult = hits{1} + t.*(h2-hits{1})
+xyresult = xyzresult(:,1:2)
 
-% 4) Tidying up
-%%%%%%%%%%%%%%%
-total_time = toc(start); % Obtain total run time
-
-TOT_HOUR = floor(total_time/60^2); % # of hours
-TOT_MINS = floor(((total_time/60^2) - TOT_HOUR) * 60); % # of minutes
-TOT_SEC = round(total_time - ((TOT_HOUR*60^2) + (TOT_MINS*60))); % # of secs
-
-close_string = horzcat('Simulation complete. Total run time: ',num2str(TOT_HOUR),' h, ', num2str(TOT_MINS),' m, ', num2str(TOT_SEC),' s.');
-f = msgbox(close_string); % Display run time
+% coordinates = sym(zeros(size(line,1),3)); % Empty symbolic array for intercept coordinates
+% weights = NaN(size(line,1),1); % Empty (NaN) array for the corresponding hit weights
+% t_target = NaN(size(line,1),1); % Empty (NaN) array for values of parameter t
+% 
+% for counter = 1:size(t_target,1)
+%     t_target(counter,:) = solve(line(counter,trgt_plane) == trgt_dist, t);
+%     coordinates(counter,:) = subs(line(counter,:),t,t_target(counter,:));
+%     weights(counter,:) = hits{1}(counter,4) * exp(-a*pdist([double(coordinates(counter,:));hits{1}(counter,1:3)]));
+%     waitbar(counter/h2_barlength); % Update waitbar
+% end
+% close(h2) % Close waitbar
+% 
+% % 4) Prepare outputs
+% %%%%%%%%%%%%%%%%%%%%
+% coordinates = double(coordinates); % Convert coordinates to double
+% 
+% % 5) Tidying up
+% %%%%%%%%%%%%%%%
+% total_time = toc(start); % Obtain total run time
+% 
+% TOT_HOUR = floor(total_time/60^2); % # of hours
+% TOT_MINS = floor(((total_time/60^2) - TOT_HOUR) * 60); % # of minutes
+% TOT_SEC = round(total_time - ((TOT_HOUR*60^2) + (TOT_MINS*60))); % # of secs
+% 
+% close_string = horzcat('Simulation complete. Total run time: ',num2str(TOT_HOUR),' h, ', num2str(TOT_MINS),' m, ', num2str(TOT_SEC),' s.');
+% f = msgbox(close_string); % Display run time
