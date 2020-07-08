@@ -10,6 +10,9 @@
 % b) Calculates the distribution of packet weights across a user-specified 
 % area within the target plane.
 
+% Info from:
+% https://tinyurl.com/ycte3xbr
+
 % 1) Setting up
 %%%%%%%%%%%%%%%
 
@@ -60,32 +63,19 @@ ind = sub2ind(size(nHits),binX(hitGroups), binY(hitGroups));
 weightMatrix = nHits; 
 weightMatrix(ind) = totWeights;
 
-% Add weighted hit plot
-ax2 = subplot(1,1,1); 
-I = imagesc(ax2,xGrid(1:end-1)+gridSize/2, yGrid(1:end-1)+gridSize/2,weightMatrix');
-ax2.YDir = 'normal';
-linkprop([ax,ax2],{'xlim','ylim','xtick','ytick','XTickLabel','YTickLabel'})
-grid(ax2,'on')
-axis(ax2,'equal')
-axis(ax2,'tight')
-cb2 = colorbar(ax2);
-ax2.CLim = [0,max(totWeights)]; 
-ax2.Colormap(1,:) = [1,1,1]; % This sets 0-values to white
-ylabel(cb2,'Weight sum')
-title(ax2,'Weighted hits')
-text(ax2, xGridMat(hitIdx)+gridSize/2, yGridMat(hitIdx)+gridSize/2, compose('%.2f',weightMatrix(hitIdx)), ...
-    'HorizontalAlignment', 'Center', 'VerticalAlignment', 'middle','Fontsize', 10, 'Color', 'r')
-text(ax2, min(xlim(ax2)), min(ylim(ax2)), 'Numbers show sum of weights', 'VerticalAlignment', 'bottom')
-
-% 
-% [xq,yq] = meshgrid(-grid_width/2:grid_step:grid_width/2,...
-%     -grid_width/2:grid_step:grid_width/2); % Target mesh grid
-% 
-% vq = griddata(coordinates(:,1),coordinates(:,2),weights,xq,yq);
-% % Interpolate the 3D scattered data (2D coordinate and weight)
-% 
-% % Plot received intensity profile at the target plane.
-% contourf(xq,yq,vq);
-% xlabel('X (m)'); ylabel('Y (m)');
-% set(gca, 'FontSize', 20);
-% title('Interpolated received intensity at target');
+% % Add weighted hit plot
+% ax2 = subplot(1,1,1); 
+% I = imagesc(ax2,xGrid(1:end-1)+gridSize/2, yGrid(1:end-1)+gridSize/2,weightMatrix');
+% ax2.YDir = 'normal';
+% linkprop([ax,ax2],{'xlim','ylim','xtick','ytick','XTickLabel','YTickLabel'})
+% grid(ax2,'on')
+% axis(ax2,'equal')
+% axis(ax2,'tight')
+% cb2 = colorbar(ax2);
+% ax2.CLim = [0,max(totWeights)]; 
+% ax2.Colormap(1,:) = [1,1,1]; % This sets 0-values to white
+% ylabel(cb2,'Weight sum')
+% title(ax2,'Weighted hits')
+% text(ax2, xGridMat(hitIdx)+gridSize/2, yGridMat(hitIdx)+gridSize/2, compose('%.2f',weightMatrix(hitIdx)), ...
+%     'HorizontalAlignment', 'Center', 'VerticalAlignment', 'middle','Fontsize', 10, 'Color', 'r')
+% text(ax2, min(xlim(ax2)), min(ylim(ax2)), 'Numbers show sum of weights', 'VerticalAlignment', 'bottom')

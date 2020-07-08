@@ -9,7 +9,10 @@
 % For packets that intercept this plane the code then determines the
 % coordinates at which they intercept it, and the corresponding photon
 % weight at this position. These results are saved as "coordinates" and
-% "weights" in the workspace.
+% "hitweights" in the workspace.
+
+% Info from:
+% https://tinyurl.com/ya57u98r
 
 % 1) Setting up
 %%%%%%%%%%%%%%%
@@ -45,7 +48,7 @@ active_packets = true(size(positions{1},1),1);
 hit_index = false(size(positions{1},1),1);
 
 start = tic; % Start main timer
-h1 = waitbar(0,'Step 1 of 2: Searching for packets that intercept the target plane...'); % Initialise progress bar   
+h1 = waitbar(0,'Searching for packets that intercept the target plane...'); % Initialise progress bar   
 h1_barlength = size(active_packets,1); % Max value for progress bar
 
 for counter = 1:size(positions,2)-1
@@ -71,7 +74,7 @@ hits{2}(idx,:) = [];
 % Using the parametric line equation, find the values of parameter "t" at 
 % the point where the Z coordinate is equal to "trgt_dist", i.e. the values 
 % of t at the intercepts:
-t = (trgt_dist -hits{1}(:,3))./(hits{2}(:,3)-hits{1}(:,3));
+t = (trgt_dist -hits{1}(:,trgt_plane))./(hits{2}(:,trgt_plane)-hits{1}(:,trgt_plane));
 
 % Enter these values of t into the line equation to find the coordinates of
 % interception:
@@ -79,7 +82,7 @@ coordinates = hits{1}(:,1:3) + t.*(hits{2}(:,1:3)-hits{1}(:,1:3));
 
 % Find the corresponding weights at the intercept points:
 d = vecnorm(transpose(coordinates - hits{1}(:,1:3))); % Distance between points
-hitweights = hits{1}(:,4) * exp(-a*d); % Updated weights
+hitweights = hits{1}(:,4) .* exp(-a.*transpose(d)); % Updated weights
 
 % 4) Tidying up
 %%%%%%%%%%%%%%%
