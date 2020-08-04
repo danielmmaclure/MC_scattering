@@ -34,7 +34,7 @@ y_max = centre(:,2) + max_deviation;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 target_hits = find(coordinates(:,1) >= x_min & coordinates(:,1) <= x_max...
     & coordinates(:,2) >= y_min & coordinates(:,2) <= y_max);
-Rx_received_total = sum(weights(target_hits)); % This is the total sum of packets hitting the receiver.
+Rx_received_total = sum(hitweights(target_hits)); % This is the total sum of packets hitting the receiver.
 
 % 3) Calculated distribution of packets within the specified 'grid'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,7 +58,7 @@ grid_hits = find(abs(coordinates(:,1)) <= 0.5*grid_width & ...
 
 % Sum weights within each bin
 [~, hitGroups, hitGroupID] = unique([binX,binY],'rows','stable');
-totWeights = splitapply(@sum,weights(grid_hits),hitGroupID); 
+totWeights = splitapply(@sum,hitweights(grid_hits),hitGroupID); 
 ind = sub2ind(size(nHits),binX(hitGroups), binY(hitGroups));
 weightMatrix = nHits; 
 weightMatrix(ind) = totWeights;

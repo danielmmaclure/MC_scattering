@@ -26,7 +26,7 @@ other_index = find(abs(dir(active_index,3)) < 0.99999); % Indices of all other a
 
 dir(vert_index,1) = sin(psi(vert_index,1)) .* cos(theta(vert_index,1));
 dir(vert_index,2) = sin(psi(vert_index,1)) .* sin(theta(vert_index,1));
-dir(vert_index,3) = cos(psi(vert_index,1));%sign(dir(vert_index,3)) .* cos(psi(vert_index,1));
+dir(vert_index,3) = cos(psi(vert_index,1));
 
 % For all other packets we update the direction cosines as follows
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
