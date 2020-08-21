@@ -1,2 +1,3 @@
 # Ignore .mat files
 *.mat
+*.csv
