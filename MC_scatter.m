@@ -8,12 +8,14 @@ close all
 % 1) Define input properties
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The following code prompts the user for some inputs
-prompt = {'Absorption coefficient, a (m^{-1})','Scattering coefficient, b (m^-1)','Packets launched per loop','Number of loops','Path length max. (m)','Maximum number of scattering events'};
-def = {'0.00922','0.179','100e4','5','50','10'};
+prompt = {'Absorption coefficient, a (m^{-1})','Scattering coefficient, b (m^-1)','Packets launched per loop','Number of loops','Path length max. (m)','Maximum number of scattering events','Source Type','Source semiangle (degrees)'};
+def = {'0.00922','0.179','100e4','5','50','10','Ideal','60'};
 options.Resize='on';
 options.WindowStyle='normal';
 inputs = inputdlg(prompt,'Inputs',1,def,options);
-inputs = str2double(inputs);
+sourcetype = cell2mat(inputs(7,1));
+semiangle = str2num(cell2mat(inputs(8,1)));
+inputs = str2double(inputs(1:6));
 
 a = inputs(1,1); % absorption coefficient m^ -1
 b = inputs(2,1); % scattering coefficient m^-1
@@ -22,6 +24,18 @@ packets = inputs(3,1); % # of packets launched per loop
 total_loops = inputs(4,1); % # Total number of loops
 pmax = inputs(5,1); % Maximum path length (m)
 max_scatter = inputs(6,1); % Maximum number of scattering events
+
+
+% 1a) - Define fit function for Psi versus random variable relationship 
+% (if required).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if sourcetype == "Lambertian"
+    fitfunc = Lambertian_setup(semiangle);
+elseif sourcetype == "Custom"
+    filename = uigetfile('*.csv'); % Prompt user to open file with emission profile info
+    imported = readmatrix(filename);
+    fitfunc = Custom_setup(imported(:,1),imported(:,2));
+end
 
 % 2) Begin simulation
 %%%%%%%%%%%%%%%%%%%%%
@@ -36,7 +50,15 @@ while num_loops < total_loops
 active_packets = true(packets,1); % Index of "Active photons"
 weights = ones(packets,1); % Initial photon weights
 
-[weights,start_pos,dir] = create_photons(packets); % Initialises photon packet angles, weights, positions and direction vectors
+switch sourcetype
+    case "Ideal"
+        [weights,start_pos,dir] = create_photons_ideal(packets,squares); % Initialises photon packet angles, weights, positions and direction vectors
+    case "Lambertian"
+        [weights,start_pos,dir] = create_photons(packets,squares,fitfunc);
+    case "Custom"
+        [weights,start_pos,dir] = create_photons(packets,squares,fitfunc);
+end
+
 positions = cell(1,max_scatter); % Empty cell array to be populated with packet position history as they are moved during simulation
 positions{1} = horzcat(single(start_pos),single(weights)); % First position saved is the start position, 4th column are the packet weights at these positions
 scatter_cntr = 1;

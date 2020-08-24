@@ -1,12 +1,12 @@
 %%% New M.C. scripts, Apr 2018
 %%% Create new photons, Lambertian source
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [init_packet_weight,pos,dir] = create_photons(packets,squares,fitfunc)
+function [init_packet_weight,pos,dir] = create_photons_ideal(packets,squares)
 
-t1 = rand(packets,1); % Dice roll for Azimuth (theta) angles
-t2 = rand(packets,1); % Dice roll for Elevation (psi) angles
+t1 = rand(packets,1); % Dice roll for Azimuth (Theta) angles
+
 theta = 2*pi*(t1); % Randomised initial Azimuth (Theta) angles (0 to 2pi)
-psi = fitfunc(t2); % Initialise psi angles using previously defined fit function
+psi = zeros(packets,1); % Initial psi angles (all zero)
 init_packet_weight = ones(packets,1); % Initial packet weights (all 1)
 
 % Calculate direction cosines (see Leathers, Section 3.2 and 4.2)

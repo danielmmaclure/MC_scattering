@@ -63,7 +63,7 @@ ind = sub2ind(size(nHits),binX(hitGroups), binY(hitGroups));
 weightMatrix = nHits; 
 weightMatrix(ind) = totWeights;
 
-% % Add weighted hit plot
+% Add weighted hit plot
 % ax2 = subplot(1,1,1); 
 % I = imagesc(ax2,xGrid(1:end-1)+gridSize/2, yGrid(1:end-1)+gridSize/2,weightMatrix');
 % ax2.YDir = 'normal';
