@@ -1,32 +1,8 @@
-% 1) Setup
-%%%%%%%%%%
-%clear all
-close all
-
 %%% INPUTS %%%
 
-% 1) Define input properties
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% The following code prompts the user for some inputs
-prompt = {'Absorption coefficient, a (m^{-1})','Scattering coefficient, b (m^-1)','Packets launched per loop','Number of loops','Path length max. (m)','Maximum number of scattering events','Source Type','Source semiangle (degrees)'};
-def = {'0.00922','0.179','100e4','5','50','10','Ideal','60'};
-options.Resize='on';
-options.WindowStyle='normal';
-inputs = inputdlg(prompt,'Inputs',1,def,options);
-sourcetype = cell2mat(inputs(7,1));
-semiangle = str2num(cell2mat(inputs(8,1)));
-inputs = str2double(inputs(1:6));
 
-a = inputs(1,1); % absorption coefficient m^ -1
-b = inputs(2,1); % scattering coefficient m^-1
-
-packets = inputs(3,1); % # of packets launched per loop
-total_loops = inputs(4,1); % # Total number of loops
-pmax = inputs(5,1); % Maximum path length (m)
-max_scatter = inputs(6,1); % Maximum number of scattering events
-
-
-% 1a) - Define fit function for Psi versus random variable relationship 
+function MC_scatter(a,b,packets,total_loops,max_scatter,pmax,sourcetype,semiangle,pixels)
+% 1) - Define fit function for Psi versus random variable relationship 
 % (if required).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if sourcetype == "Lambertian"
@@ -52,11 +28,11 @@ weights = ones(packets,1); % Initial photon weights
 
 switch sourcetype
     case "Ideal"
-        [weights,start_pos,dir] = create_photons_ideal(packets,squares); % Initialises photon packet angles, weights, positions and direction vectors
+        [weights,start_pos,dir] = create_photons_ideal(packets,pixels); % Initialises photon packet angles, weights, positions and direction vectors
     case "Lambertian"
-        [weights,start_pos,dir] = create_photons(packets,squares,fitfunc);
+        [weights,start_pos,dir] = create_photons(packets,pixels,fitfunc);
     case "Custom"
-        [weights,start_pos,dir] = create_photons(packets,squares,fitfunc);
+        [weights,start_pos,dir] = create_photons(packets,pixels,fitfunc);
 end
 
 positions = cell(1,max_scatter); % Empty cell array to be populated with packet position history as they are moved during simulation
@@ -96,7 +72,8 @@ scatter_cntr = scatter_cntr + 1; % Increment scattering event counter
 end
 % h) Save position and weights history
 savename = horzcat('Loop',num2str(num_loops),'.mat');
-save(savename,'positions','a','inputs');
+save(savename,'positions','a','b','packets','total_loops','max_scatter',...
+    'pmax','sourcetype','semiangle','pixels');
 end
 
 % Simulation complete. Tidying up:
