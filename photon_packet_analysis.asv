@@ -17,9 +17,7 @@
 % 1) Setting up
 %%%%%%%%%%%%%%%
 
-function [coordinates,hitweights] = photon_packet_analysis(filename,trgt_plane,trgt_dist)
-load(filename);
-
+function photon_packet_analysis(trgt_plane,trgt_dist);
 % Check in which plane the target lies
 switch trgt_plane
     case 'x'
@@ -89,4 +87,3 @@ TOT_SEC = round(total_time - ((TOT_HOUR*60^2) + (TOT_MINS*60))); % # of secs
 
 close_string = horzcat('Analysis complete. Total time: ',num2str(TOT_HOUR),' h, ', num2str(TOT_MINS),' m, ', num2str(TOT_SEC),' s.');
 f = msgbox(close_string); % Display run time
-end

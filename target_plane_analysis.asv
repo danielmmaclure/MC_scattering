@@ -52,7 +52,7 @@ ind = sub2ind(size(nHits),binX(hitGroups), binY(hitGroups));
 weightMatrix = nHits; 
 weightMatrix(ind) = totWeights;
 
-save(outputfilename,'coordinates','hitweights','xGrid','yGrid', ...
+save(output,'coordinates','hitweights','xGrid','yGrid', ...
     'Rx_received_total','weightMatrix'); % Save output
 
 % Add weighted hit plot
