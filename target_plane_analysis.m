@@ -16,10 +16,10 @@
 % 1) Setting up
 %%%%%%%%%%%%%%%
 function [Rx_received_total,xGrid,yGrid,weightMatrix] = target_plane_analysis(coordinates,hitweights,centre,max_deviation,grid_width,gridSize,outputfilename)
-x_min = centre(:,1) - max_deviation;
-x_max = centre(:,1) + max_deviation;
-y_min = centre(:,2) - max_deviation;
-y_max = centre(:,2) + max_deviation;
+x_min = centre(:,1) - max_deviation/2;
+x_max = centre(:,1) + max_deviation/2;
+y_min = centre(:,2) - max_deviation/2;
+y_max = centre(:,2) + max_deviation/2;
 
 % 2) Find all packets within target area and sum their packet weights
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

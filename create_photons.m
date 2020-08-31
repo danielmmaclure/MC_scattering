@@ -20,8 +20,8 @@ tsquare = randi(n,packets,1); % Randomly allocate packets to each square
 tx = rand(packets,1); % Randomise the x position within that square
 ty = rand(packets,1); % Randomise the x position within that square
 
-pos(:,1) = tx+squares(tsquare,1); % Initial x coordinates 
-pos(:,2) = ty+squares(tsquare,2); % Initial y coordinates 
+pos(:,1) = squares(tsquare,1) + (tx.*squares(tsquare,3)); % Initial x coordinates (bottom left corner + random width)
+pos(:,2) = squares(tsquare,2) + (ty.*squares(tsquare,4)); % Initial y coordinates (bottom left corner + random height)
 pos(:,3) = zeros(packets,1); % Initial z coordinates (all = 0)
 
 end
