@@ -15,7 +15,7 @@
 
 % 1) Setting up
 %%%%%%%%%%%%%%%
-function [Rx_received_total,xGrid,yGrid,weightMatrix] = target_plane_analysis(coordinates,hitweights,centre,max_deviation,grid_width,gridSize,outputfilename)
+function [Rx_received_total,xGrid,yGrid,weightMatrix] = target_plane_analysis(coordinates,hitweights,centre,max_deviation,grid_width,gridSize,outputfilename,savetype)
 x_min = centre(:,1) - max_deviation/2;
 x_max = centre(:,1) + max_deviation/2;
 y_min = centre(:,2) - max_deviation/2;
@@ -52,8 +52,13 @@ ind = sub2ind(size(nHits),binX(hitGroups), binY(hitGroups));
 weightMatrix = nHits; 
 weightMatrix(ind) = totWeights;
 
-save(outputfilename,'coordinates','hitweights','xGrid','yGrid', ...
+if savetype == "Results only"
+    save(outputfilename,'xGrid','yGrid', ...
     'Rx_received_total','weightMatrix'); % Save output
+elseif savetype == "All"
+    save(outputfilename,'coordinates','hitweights','xGrid','yGrid', ...
+    'Rx_received_total','weightMatrix'); % Save output
+end
 
 % Add weighted hit plot
 % ax2 = subplot(1,1,1); 
