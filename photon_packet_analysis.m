@@ -42,19 +42,13 @@ hits{2} = NaN(size(positions{1},1),4); % Positions after intercept
 active_packets = true(size(positions{1},1),1);
 hit_index = false(size(positions{1},1),1);
 
-start = tic; % Start main timer
-h1 = waitbar(0,'Searching for packets that intercept the target plane...'); % Initialise progress bar   
-h1_barlength = size(active_packets,1); % Max value for progress bar
-
 for counter = 1:size(positions,2)-1
 hit_index(active_packets) = ((positions{counter}(active_packets,trgt_plane)) < trgt_dist) & ((positions{counter+1}(active_packets,trgt_plane)) > trgt_dist);
 hits{1}(hit_index,:) = positions{counter}(hit_index,:);
 hits{2}(hit_index,:) = positions{counter+1}(hit_index,:);
 active_packets(hit_index) = 0; % These packets have "hit" the target, so can be removed from further checking
 hit_index(active_packets == 0) = 0;
-waitbar(sum(active_packets == 0)/h1_barlength); % Update waitbar
 end
-close(h1) % Close waitbar
 
 % Remove NaNs, i.e. lines corresponding to packets that never hit the
 % target
@@ -78,15 +72,4 @@ coordinates = hits{1}(:,1:3) + t.*(hits{2}(:,1:3)-hits{1}(:,1:3));
 % Find the corresponding weights at the intercept points:
 d = vecnorm(transpose(coordinates - hits{1}(:,1:3))); % Distance between points
 hitweights = hits{1}(:,4) .* exp(-a.*transpose(d)); % Updated weights
-
-% 4) Tidying up
-%%%%%%%%%%%%%%%
-total_time = toc(start); % Obtain total run time
-
-TOT_HOUR = floor(total_time/60^2); % # of hours
-TOT_MINS = floor(((total_time/60^2) - TOT_HOUR) * 60); % # of minutes
-TOT_SEC = round(total_time - ((TOT_HOUR*60^2) + (TOT_MINS*60))); % # of secs
-
-close_string = horzcat('Analysis complete. Total time: ',num2str(TOT_HOUR),' h, ', num2str(TOT_MINS),' m, ', num2str(TOT_SEC),' s.');
-f = msgbox(close_string); % Display run time
 end

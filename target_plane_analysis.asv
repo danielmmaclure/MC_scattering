@@ -15,7 +15,7 @@
 
 % 1) Setting up
 %%%%%%%%%%%%%%%
-function [Rx_received_total,xGrid,yGrid,weightMatrix] = target_plane_analysis(coordinates,hitweights,centre,max_deviation,grid_width,gridSize,Rx_previous,weightMatrix_previous,savetype,save_yn,outputfilename)
+function [Rx_received_total,xGrid,yGrid,weightMatrix] = target_plane_analysis(coordinates,hitweights,centre,max_deviation,grid_width,gridSize,Rx_previous,weightMatrix_previous)
 x_min = centre(:,1) - max_deviation/2;
 x_max = centre(:,1) + max_deviation/2;
 y_min = centre(:,2) - max_deviation/2;
@@ -47,8 +47,7 @@ grid_hits = find(abs(coordinates(:,1)) <= 0.5*grid_width & ...
 
 % Check if there are previous results to add
 if isempty(weightMatrix_previous) == 1
-    weightMatrix_previous = zeros(length(xGrid)-1,length(yGrid)-1); % If so, set all values to 0
-end
+    weightMatrix_previous = zeros(
 
 % Sum weights within each bin
 [~, hitGroups, hitGroupID] = unique([binX,binY],'rows','stable');
@@ -57,14 +56,4 @@ ind = sub2ind(size(nHits),binX(hitGroups), binY(hitGroups));
 weightMatrix = nHits; 
 weightMatrix(ind) = totWeights;
 weightMatrix = weightMatrix + weightMatrix_previous; % Add results from this loop to the previous loop
-
-% Save results (if we're done)
-if save_yn == "yes"
-    if savetype == "Results only"
-    save(outputfilename,'xGrid','yGrid', ...
-    'Rx_received_total','weightMatrix'); % Save output
-    elseif savetype == "All"
-    save(outputfilename,'coordinates','hitweights','xGrid','yGrid', ...
-    'Rx_received_total','weightMatrix'); % Save output
-    end
 end
