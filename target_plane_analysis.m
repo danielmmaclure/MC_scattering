@@ -25,7 +25,8 @@ y_max = centre(:,2) + max_deviation/2;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 target_hits = find(coordinates(:,1) >= x_min & coordinates(:,1) <= x_max...
     & coordinates(:,2) >= y_min & coordinates(:,2) <= y_max);
-Rx_received_total = Rx_previous + sum(hitweights(target_hits)); % This is the total sum of packets hitting the receiver (add new total to old total).
+Rx_received_total = sum(hitweights(target_hits)); % This is the total sum of packets hitting the receiver
+Rx_received_total = Rx_received_total + Rx_previous; % Add the previous total to the new total
 
 % 3) Calculated distribution of packets within the specified 'grid'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,7 +59,7 @@ weightMatrix = nHits;
 weightMatrix(ind) = totWeights;
 weightMatrix = weightMatrix + weightMatrix_previous; % Add results from this loop to the previous loop
 
-% Save results (if we're done)
+% Save results (if this is the final loop to analyse)
 if save_yn == "yes"
     if savetype == "Results only"
     save(outputfilename,'xGrid','yGrid', ...
