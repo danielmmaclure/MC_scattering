@@ -15,7 +15,7 @@
 
 % 1) Setting up
 %%%%%%%%%%%%%%%
-function [Rx_received_total,xGrid,yGrid,weightMatrix] = target_plane_analysis(coordinates,hitweights,centre,max_deviation,grid_width,gridSize,Rx_previous,weightMatrix_previous,savetype,save_yn,outputfilename)
+function [Rx_received_total,xGrid,yGrid,weightMatrix] = target_plane_analysis(coordinates,hitweights,centre,max_deviation,grid_width,grid_num,Rx_previous,weightMatrix_previous,savetype,save_yn,outputfilename)
 x_min = centre(:,1) - max_deviation/2;
 x_max = centre(:,1) + max_deviation/2;
 y_min = centre(:,2) - max_deviation/2;
@@ -36,8 +36,8 @@ targetLoc = [-0.5*grid_width, -0.5*grid_width, grid_width, grid_width];
 %[x (lower left corner), y (lower left corner), width, height], (m)
 
 % Create target grid
-xGrid = targetLoc(1) + gridSize*(0:floor(targetLoc(3)/gridSize));
-yGrid = targetLoc(2) + gridSize*(0:floor(targetLoc(4)/gridSize));
+xGrid = linspace(targetLoc(1),targetLoc(1)+targetLoc(3),grid_num+1);
+yGrid = linspace(targetLoc(2),targetLoc(1)+targetLoc(4),grid_num+1);
 
 % Find packets within grid boundaries
 grid_hits = find(abs(coordinates(:,1)) <= 0.5*grid_width & ... 
