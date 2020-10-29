@@ -2,7 +2,7 @@
 %%% Scatter packets - update direction cosines
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [dir,psi] = scatter_packets(dir,prev_psi,active_index)
+function [dir,PSI] = scatter_packets(dir,psi,active_index)
 
 %load('fitfunc.mat'); % Load the F-F fit function
 
@@ -14,8 +14,7 @@ t1(active_index==0) = NaN; % t1 for inactive packets set to "NaN"
 t2(active_index==0) = NaN; % t2 for inactive packets set to "NaN"
 
 %psi = PDFfit(t1); %%% USE THIS CODE FOR F-F SCATTERING %%%
-scatter_psi = acos(1-(2*t1)); %%% USE THIS CODE FOR ISOTROPIC SCATTERING %%% - scattering angle relative to direction of travel
-psi = scatter_psi + prev_psi; % New psi angle of travel, relative to z-axis
+psi = acos(1-(2*t1)); %%% USE THIS CODE FOR ISOTROPIC SCATTERING %%%
 theta = 2*pi*t2; % NEW CODE = update azimuthal scattering angles
 
 % See Leathers Section 4.2 %

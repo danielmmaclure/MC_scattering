@@ -1,7 +1,7 @@
 %%% New M.C. scripts, Apr 2018
 %%% Create new photons, Lambertian source
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [init_packet_weight,pos,dir] = create_photons_ideal(packets,squares)
+function [init_packet_weight,pos,dir,psi] = create_photons_ideal(packets,squares)
 
 t1 = rand(packets,1); % Dice roll for Azimuth (Theta) angles
 

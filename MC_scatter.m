@@ -28,11 +28,11 @@ weights = ones(packets,1); % Initial photon weights
 
 switch sourcetype
     case "Ideal"
-        [weights,start_pos,dir] = create_photons_ideal(packets,pixels); % Initialises photon packet angles, weights, positions and direction vectors
+        [weights,start_pos,dir,psi] = create_photons_ideal(packets,pixels); % Initialises photon packet angles, weights, positions and direction vectors
     case "Lambertian"
-        [weights,start_pos,dir] = create_photons(packets,pixels,fitfunc);
+        [weights,start_pos,dir,psi] = create_photons(packets,pixels,fitfunc);
     case "Custom"
-        [weights,start_pos,dir] = create_photons(packets,pixels,fitfunc);
+        [weights,start_pos,dir,psi] = create_photons(packets,pixels,fitfunc);
 end
 
 positions = cell(1,max_scatter); % Empty cell array to be populated with packet position history as they are moved during simulation
@@ -67,7 +67,7 @@ scatter_cntr = scatter_cntr + 1; % Increment scattering event counter
 [weights] = boost(weights,active_packets);
 
 % g) Scatter active packets
-[dir] = scatter_packets(dir,active_packets); % Scatter active packets
+[dir,psi] = scatter_packets(dir,psi,active_packets); % Scatter active packets
 
 end
 % h) Save position and weights history
